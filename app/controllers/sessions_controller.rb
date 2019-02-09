@@ -6,14 +6,21 @@ class SessionsController < ApplicationController
 			user = current_user
 		end
 		session = Session.find(params[:id])
-		@session_props = {session: session, user: user}
+		price = SessionPriceService.get_price(session)
+		channel_name = session.channel_name
+		@session_props = {session: session,coach: session.users.coach,
+											members:session.users.trainee, user: user, price: price,
+											channel_name: channel_name}
     end
 
 		def create
         pt = PriceTable.find_by(price_point: session_params[:price_point])
         @session = Session.new(session_params.except(:price_point).merge(price_table_id: pt.id))
         @session.save
-        if @session.persisted?
+				if @session.persisted?
+					@session.set_channel_name
+					@session.save
+					@session.users << current_user
             redirect_to root_path
         else
             render json: {errors: 'Every field needs to be filled in!'}
@@ -23,6 +30,8 @@ class SessionsController < ApplicationController
     private
 
     def session_params
-        params.require(:session).permit(:title, :start_date, :price_point)
-    end
+			params.require(:session).permit(:title, :start_date, :price_point)
+		end
+
+
 end

@@ -9,43 +9,33 @@ export class AllSessions extends Component {
 			sessionType : props.sessionType,
 			buttonName : "",
 			showDetails: false,
-			user: props.sessionlist.sessions.user
+			user: props.sessionlist.sessions.user,
+			mysession: props.sessionlist.sessions.mysessions
 		};
 		this.showPage = this.showPage.bind(this);
 	}
 
-	componentDidMount() {
-		let user = this.state.user;
-		let availability = this.state.sessionType;
-		
-		if (user) {
-			if (user.role === "coach" && availability === "booked" || availability === "full") {
-				this.setState({ buttonName: "Start" });
-			} else if (user.role === "trainee" && availability === "available") {
-				this.setState({ buttonName: "Book" });
-			} else {
-				this.setState({ buttonName: "Join" });
-			}
-		}
-	}
-
 	showPage(event) {
-		let user = this.state.user;
-
-		if (user.role === "trainee") {
-			document.location.href = '/sessions/' + event.target.value;
-		} else if (user.role === "coach") {
-			document.location.href = '/startsession';
-		}
+		document.location.href = '/sessions/' + event.target.value;
 	}
 
 	render() {
+		let mySessions = [];
+		if(this.state.mysession) {
+			this.state.mysession.forEach(session => {
+				mySessions.push(session.id)
+			})
+		}
 		let allSessions = this.state.sessions.map(session => {
-			if (session.status === this.state.sessionType) {
+			if (mySessions.includes(session.id)) {
 				return (
-					<SessionCard session={session} user={this.state.user} buttonName={this.state.buttonName} showPage={this.showPage} />
+					<SessionCard session={session} user={this.state.user} buttonName={'Join'} showPage={this.showPage} />
 				);
-			}
+			} else {
+				return (
+					<SessionCard session={session} user={this.state.user} buttonName={'Book'} showPage={this.showPage} />
+				);
+				}
 		});
 
 		return (

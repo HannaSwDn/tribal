@@ -4,12 +4,13 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
 				 :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [:facebook]
-  
-  enum role: { trainee: 0, coach: 1 } 
+
+  enum role: { trainee: 0, coach: 1 }
 
 	validates_presence_of :first_name, :last_name, :role
 
 	has_many :transactions
+	has_and_belongs_to_many :sessions
 
 	def self.new_with_session(params, session)
     super.tap do |user|

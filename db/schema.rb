@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_05_120014) do
+ActiveRecord::Schema.define(version: 2019_02_08_132421) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,7 +31,14 @@ ActiveRecord::Schema.define(version: 2019_02_05_120014) do
   end
 
   create_table "price_tables", force: :cascade do |t|
-    t.integer "trainees"
+    t.integer "trainee_1"
+    t.integer "trainee_2"
+    t.integer "trainee_3"
+    t.integer "trainee_4"
+    t.integer "trainee_5"
+    t.integer "trainee_6"
+    t.integer "trainee_7"
+    t.integer "trainee_8"
     t.integer "price_point"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -45,7 +52,15 @@ ActiveRecord::Schema.define(version: 2019_02_05_120014) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "price_table_id"
+    t.string "channel_name"
+    t.integer "price"
     t.index ["price_table_id"], name: "index_sessions_on_price_table_id"
+  end
+
+  create_table "sessions_users", id: false, force: :cascade do |t|
+    t.bigint "session_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["session_id", "user_id"], name: "index_sessions_users_on_session_id_and_user_id"
   end
 
   create_table "transactions", force: :cascade do |t|

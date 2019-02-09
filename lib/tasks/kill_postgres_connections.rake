@@ -12,3 +12,4 @@ EOF
 end
 
 task "db:drop" => :kill_postgres_connections
+# task "db:seed" => :kill_postgres_connections

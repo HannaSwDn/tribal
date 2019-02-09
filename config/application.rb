@@ -15,6 +15,7 @@ Bundler.require(*Rails.groups)
 module Tribal
 	class Application < Rails::Application
 		config.active_job.queue_adapter = :delayed_job
+		config.assets.initialize_on_precompile = false
 		config.load_defaults 5.2
 		config.time_zone = "Europe/Stockholm"
     config.generators do |generate|

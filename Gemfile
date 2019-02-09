@@ -17,9 +17,10 @@ gem 'omniauth-facebook'
 gem 'stripe-rails'
 gem 'delayed_job_active_record'
 gem 'daemons'
+gem 'factory_bot_rails'
+
 
 group :development, :test do
-  gem 'factory_bot_rails'
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-rails'

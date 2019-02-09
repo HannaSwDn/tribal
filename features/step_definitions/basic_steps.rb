@@ -20,10 +20,6 @@ Given("I fill in {string} field with {string}") do |element, value|
 	fill_in element, with: value
 end
 
-Given("show me the page") do
-	save_and_open_page
-end
-
 When("I select {string} from {string}") do |option, selection|
   select option, from: selection
 end
@@ -31,6 +27,7 @@ end
 Given("I set the date and time") do
     fill_in 'session[start_date]', with: Time.new()
 end
+
 Given('I fill in the payment form') do
   card_no = '42'
   stripe_iframe = find("iframe[name='__privateStripeFrame4']", visible: false)
@@ -54,5 +51,35 @@ Given("the time is {int} {int} {int} {int}:{int}:{int}") do |int, int2, int3, in
 end
 
 Given("the job runs") do
-	Delayed::Worker.new.run( Delayed::Job.find(1))
+	Delayed::Worker.new.run(Delayed::Job.last)
+end
+
+Then("the amount is {int}") do |amount|
+	user = User.find_by(first_name: 'John')
+	transaction = Transaction.find_by(user_id: user.id)
+	expect(transaction.amount).to equal amount
+end
+
+Then("three more trainees attend") do
+	session = Session.find_by(title: 'Crossfit')
+	session.users << User.find_by(first_name: 'John2')
+	session.users << User.find_by(first_name: 'John3')
+	session.users << User.find_by(first_name: 'John4')
+end
+
+
+Given("coach Jack has created the session") do
+	session = Session.find_by(title: 'Crossfit')
+  session.users << User.find_by(first_name: 'Jack')
+end
+
+Given("I click {string} within {string}") do |button, dom|
+	within("div##{dom}") do
+		click_on button
+  end
+end
+
+Given("trainee Jon buys a session") do
+	session = Session.find_by(title: 'Crossfit')
+  session.users << User.find_by(first_name: 'Jon')
 end
